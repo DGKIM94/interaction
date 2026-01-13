@@ -263,7 +263,19 @@ function renderAwardsPage() {
     });
 }
 
+/* --- 5. Publications Rendering --- */
 function renderPublications() {
-    // 기존과 동일 (필요시 복구)
-    if(typeof applyPubFilter === 'function') applyPubFilter();
+    const container = document.getElementById('pub-list');
+    if (!container) return;
+
+    applyPubFilter(); // 초기화
+
+    // 필터 버튼 이벤트
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            applyPubFilter();
+        });
+    });
 }
