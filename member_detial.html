@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Members - Interaction Lab</title>
+    <title>Member Detail - Interaction Lab</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -24,29 +24,10 @@
     </nav>
 
     <div class="container">
-        <div class="page-header">
-            <h1>Our Team</h1>
-            <p>Researchers passionate about haptic interaction.</p>
-        </div>
+        <a href="members.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Members</a>
 
-        <h2 class="section-title">Director</h2>
-        <div id="prof-list" class="member-grid"></div>
-
-        <h2 class="section-title">Ph.D. Students</h2>
-        <div id="phd-list" class="member-grid"></div>
-
-        <h2 class="section-title">Master Students</h2>
-        <div id="ms-list" class="member-grid"></div>
-
-        <h2 class="section-title">Alumni</h2>
-        <div id="alumni-list" class="alumni-list"></div>
-    </div>
-
-    <div id="member-modal" class="modal-overlay">
-        <div class="modal-container">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-            <div class="modal-content" id="modal-body">
-                </div>
+        <div id="member-detail-container" class="detail-container">
+            <p>Loading member information...</p>
         </div>
     </div>
 
@@ -55,8 +36,8 @@
     <script src="data.js"></script>
     <script src="script.js"></script>
     <script>
-        // 페이지 로드 시 실행
-        renderMembers();
+        // 페이지 로드 시 상세 정보 렌더링 실행
+        renderMemberDetail();
     </script>
 </body>
 </html>
