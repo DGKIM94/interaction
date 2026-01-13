@@ -1,246 +1,128 @@
 // script.js
 
-// 1. Navigation Logic (SPA Routing)
-function navigateTo(pageId) {
-    // 1. Update Navbar Active State
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        if(item.getAttribute('onclick').includes(pageId)) {
-            item.classList.add('active');
-        }
-    });
-
-    // 2. Hide All Views
-    document.querySelectorAll('.view').forEach(view => {
-        view.classList.remove('active-view');
-    });
-
-    // 3. Show Target View
-    const target = document.getElementById(pageId);
-    if(target) {
-        target.classList.add('active-view');
-        window.scrollTo(0, 0); // Scroll to top
-    }
-
-    // Special Case: Reset Detail Views
-    document.getElementById('prof-detail').classList.add('hidden');
-}
-
-// 2. Render Functions (Executed on Load)
-document.addEventListener('DOMContentLoaded', () => {
-    renderHome();
-    renderNews();
-    renderResearch();
-    renderMembers();
-    renderPublications();
-    renderAwards();
-});
-
-/* --- Home Rendering --- */
+// 1. Home Rendering
 function renderHome() {
-    // News (Top 3)
-    const newsContainer = document.getElementById('home-news-container');
-    const recentNews = newsData.slice(0, 3);
-
-    recentNews.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'research-card'; // Reuse styling
-        div.innerHTML = `
-            <div class="card-body">
-                <small style="color:var(--primary)">${item.date}</small>
-                <h3>${item.title}</h3>
-                <p>${item.content.substring(0, 60)}...</p>
-            </div>
-        `;
-        newsContainer.appendChild(div);
+    const newsContainer = document.getElementById('home-news');
+    newsData.slice(0, 3).forEach(item => {
+        newsContainer.innerHTML += `
+            <div class="member-card" style="text-align:left; padding:20px;">
+                <small style="color:var(--secondary)">${item.date}</small>
+                <h3 style="margin:10px 0; font-size:1.1rem;">${item.title}</h3>
+                <p style="font-size:0.9rem; color:#666;">${item.content}</p>
+            </div>`;
     });
 
-    // Research Highlights (Top 4)
-    const researchContainer = document.getElementById('home-research-container');
-    const highlights = researchData.slice(0, 4);
-
-    highlights.forEach(item => {
-        const card = createResearchCard(item);
-        researchContainer.appendChild(card);
-    });
-}
-
-function createResearchCard(item) {
-    const div = document.createElement('div');
-    div.className = 'research-card';
-    div.onclick = () => showResearchDetail(item.id);
-    div.innerHTML = `
-        <img src="${item.thumbnail}" alt="${item.title}">
-        <div class="card-body">
-            <h3>${item.title}</h3>
-            <p>${item.description.substring(0, 80)}...</p>
-        </div>
-    `;
-    return div;
-}
-
-/* --- Research Detail Logic --- */
-function showResearchDetail(id) {
-    const item = researchData.find(r => r.id == id);
-    if(!item) return;
-
-    // Switch to detail view
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
-    document.getElementById('research-detail').classList.add('active-view');
-
-    const content = document.getElementById('research-detail-content');
-    content.innerHTML = `
-        <div class="detail-header">
-            <h1>${item.title}</h1>
-            <p class="highlight">${item.agency || 'Research Project'}</p>
-        </div>
-        <img src="${item.thumbnail}" alt="${item.title}" class="detail-img">
-        <div class="detail-body">
-            <p>${item.description}</p>
-            <br>
-            <h3>Project Details</h3>
-            <ul>
-                <li><strong>Period:</strong> ${item.period || 'Ongoing'}</li>
-                <li><strong>Agency:</strong> ${item.agency || 'N/A'}</li>
-            </ul>
-        </div>
-    `;
-    window.scrollTo(0,0);
-}
-
-/* --- Member Logic --- */
-function renderMembers() {
-    const profContainer = document.getElementById('prof-container');
-    const phdGrid = document.getElementById('phd-grid');
-    const msGrid = document.getElementById('ms-grid');
-    const alumniList = document.getElementById('alumni-list');
-
-    memberData.forEach(member => {
-        if (member.role === 'prof') {
-            profContainer.innerHTML = createMemberCard(member, true);
-        } else if (member.desc.includes('Ph.D. Student') || member.desc.includes('Direct')) {
-            phdGrid.appendChild(createMemberCardHTML(member));
-        } else if (member.desc.includes('Master') || member.desc.includes('M.S.')) {
-            msGrid.appendChild(createMemberCardHTML(member));
-        } else if (member.role === 'alumni') {
-            const div = document.createElement('div');
-            div.className = 'alumni-item';
-            div.innerHTML = `<strong>${member.name}</strong> <span>${member.desc}</span>`;
-            alumniList.appendChild(div);
-        }
-    });
-}
-
-function createMemberCardHTML(member) {
-    const div = document.createElement('div');
-    div.className = 'member-card';
-    div.onclick = () => showStudentModal(member);
-    div.innerHTML = `
-        <img src="${member.image}" alt="${member.name}">
-        <div class="role-badge">${member.desc.split(',')[0]}</div>
-        <h3>${member.name}</h3>
-        <p>${member.email}</p>
-    `;
-    return div;
-}
-
-function createMemberCard(member, isProf) {
-    return `
-        <div class="member-card" style="max-width:300px; margin:0 auto;" onclick="toggleProfDetail()">
-            <img src="${member.image}" alt="${member.name}">
-            <h3>${member.name}</h3>
-            <p>${member.desc}</p>
-            <p style="color:var(--primary); margin-top:10px; font-weight:bold;">Click for Details <i class="fas fa-chevron-down"></i></p>
-        </div>
-    `;
-}
-
-function toggleProfDetail() {
-    const detailPanel = document.getElementById('prof-detail');
-    const member = memberData.find(m => m.role === 'prof');
-
-    if (detailPanel.classList.contains('hidden')) {
-        detailPanel.classList.remove('hidden');
-        detailPanel.innerHTML = `
-            <div class="prof-detail-view">
-                <img src="${member.image}" class="prof-img-large">
-                <div class="prof-info">
-                    <h2>${member.name}</h2>
-                    <p class="prof-meta">${member.desc}</p>
-                    <div class="prof-section">
-                        <h4>Contact</h4>
-                        <p><i class="fas fa-envelope"></i> ${member.email}</p>
-                        <p><i class="fas fa-globe"></i> <a href="http://www.postech.ac.kr/~choism" target="_blank">Personal Website</a></p>
-                    </div>
-                    <div class="prof-section">
-                        <h4>Education</h4>
-                        <ul>
-                            <li><strong>Ph.D.</strong> Purdue University (2003)</li>
-                            <li><strong>M.S.</strong> Seoul National University (1997)</li>
-                            <li><strong>B.S.</strong> Seoul National University (1995)</li>
-                        </ul>
-                    </div>
-                    <div class="prof-section">
-                        <h4>Professional Positions</h4>
-                        <ul>
-                            <li>Head, Dept. of CSE, POSTECH</li>
-                            <li>Professor, POSTECH</li>
-                            <li>Outside Director, bHaptics</li>
-                        </ul>
-                    </div>
-                     <div class="prof-section">
-                        <h4>Memberships</h4>
-                        <ul>
-                            <li>IEEE Senior Member</li>
-                            <li>ACM Member</li>
-                            <li>Korea Robotics Society (Lifetime)</li>
-                        </ul>
-                    </div>
+    const resContainer = document.getElementById('home-research');
+    researchData.slice(0, 4).forEach(item => {
+        resContainer.innerHTML += `
+            <div class="research-card">
+                <div class="card-body">
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
                 </div>
-            </div>
-            <div style="text-align:center;"><button class="filter-btn" onclick="document.getElementById('prof-detail').classList.add('hidden')">Close Details</button></div>
-        `;
-    } else {
-        detailPanel.classList.add('hidden');
-    }
+            </div>`;
+    });
 }
 
-function showStudentModal(member) {
-    const modal = document.getElementById('student-modal');
-    const content = document.getElementById('student-detail-content');
-    content.innerHTML = `
-        <div style="text-align:center;">
-            <img src="${member.image}" style="width:150px; height:150px; border-radius:50%; object-fit:cover; border:3px solid var(--primary);">
-            <h2 style="margin:15px 0;">${member.name}</h2>
-            <p class="role-badge">${member.desc}</p>
-            <p><i class="fas fa-envelope"></i> ${member.email}</p>
-            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
-            <p>Research Interests: Haptics, VR, HCI</p>
-        </div>
-    `;
-    modal.style.display = 'block';
-
-    document.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
-    window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; }
-}
-
-/* --- Publications --- */
+// 2. Publication Rendering (With Links)
 function renderPublications() {
+    filterPubs('all', document.querySelector('.filter-btn'));
+}
+
+function filterPubs(category, btn) {
+    // Button active state
+    if(btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
     const container = document.getElementById('pub-list');
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    container.innerHTML = '';
 
-    // Populate Select
-    // Logic to populate years omitted for brevity, hardcode in data.js or loop
+    publicationData.forEach(pub => {
+        if(category === 'all' || pub.category === category) {
+            // Link icon if link exists
+            const linkHtml = pub.link ? `<a href="${pub.link}" target="_blank" class="pub-link"><i class="fas fa-external-link-alt"></i></a>` : '';
 
-    function filter(category) {
-        container.innerHTML = '';
-        publicationData.forEach(pub => {
-            if(category === 'all' || pub.category === category) {
-                const div = document.createElement('div');
-                div.className = `pub-item ${pub.category}`;
-                div.innerHTML = `
-                    <div class="pub-year"><strong>${pub.year}</strong></div>
+            container.innerHTML += `
+                <div class="pub-item">
+                    <div class="pub-year">${pub.year}</div>
                     <div class="pub-content">
                         <h3>${pub.title}</h3>
-                        <p class="pub-authors">${pub.authors}</p>
-                        <p class="pub-venue">${pub.venue}</p
+                        <div class="pub-authors">${pub.authors}</div>
+                        <div class="pub-venue">${pub.venue}</div>
+                    </div>
+                    ${linkHtml}
+                </div>`;
+        }
+    });
+}
+
+// 3. Members Rendering
+function renderMembers() {
+    const container = document.querySelector('.container');
+    container.innerHTML += `
+        <h2>Professor</h2>
+        <div id="prof-list" class="member-grid"></div>
+        <br><h2>Ph.D. Students</h2>
+        <div id="phd-list" class="member-grid"></div>
+        <br><h2>Master Students</h2>
+        <div id="ms-list" class="member-grid"></div>
+        <br><h2>Alumni</h2>
+        <div id="alumni-list" class="alumni-list"></div>
+    `;
+
+    memberData.forEach(m => {
+        if(m.role === 'prof') {
+            document.getElementById('prof-list').innerHTML += createMemberCard(m);
+        } else if(m.desc.includes('Ph.D. Student') || m.desc.includes('Direct')) {
+            document.getElementById('phd-list').innerHTML += createMemberCard(m);
+        } else if(m.desc.includes('M.S.') || m.desc.includes('Master')) {
+            document.getElementById('ms-list').innerHTML += createMemberCard(m);
+        } else if(m.role === 'alumni') {
+            document.getElementById('alumni-list').innerHTML += `
+                <div class="alumni-item">
+                    <strong>${m.name}</strong><br>
+                    <small>${m.desc}</small>
+                </div>`;
+        }
+    });
+}
+
+function createMemberCard(m) {
+    return `
+        <div class="member-card">
+            <img src="${m.image}" onerror="this.src='images/member_placeholder.jpg'">
+            <h3>${m.name}</h3>
+            <p class="role-badge">${m.desc}</p>
+            <p style="font-size:0.9rem">${m.email}</p>
+        </div>`;
+}
+
+// 4. Research Page
+function renderResearchPage() {
+    const container = document.getElementById('research-list'); // HTML에 이 ID div 필요
+    researchData.forEach(r => {
+        container.innerHTML += `
+            <div class="pub-item" style="display:block;">
+                <h3 style="color:var(--primary); margin-bottom:10px;">${r.title}</h3>
+                <p><strong>Agency:</strong> ${r.agency} | <strong>Period:</strong> ${r.period}</p>
+                <p style="margin-top:10px;">${r.description}</p>
+            </div>`;
+    });
+}
+
+// 5. Awards Page
+function renderAwardsPage() {
+    const container = document.getElementById('award-list'); // HTML에 이 ID div 필요
+    awardData.forEach(a => {
+        container.innerHTML += `
+            <div class="pub-item">
+                <div class="pub-year">${a.date}</div>
+                <div class="pub-content">
+                    <h3>${a.title}</h3>
+                    <div class="pub-venue">${a.organization}</div>
+                </div>
+            </div>`;
+    });
+}

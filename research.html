@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research - Interaction Lab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Research Page Specific Styles */
+        .research-list-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .research-detail-view { display: none; background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .back-btn { margin-bottom: 20px; cursor: pointer; color: var(--text-sub); border: none; background: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+        .back-btn:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><a href="index.html"><img src="images/logo.png" alt="Lab Logo"></a></div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-item">Home</a></li>
+                <li><a href="news.html" class="nav-item">News</a></li>
+                <li><a href="research.html" class="nav-item active">Research</a></li>
+                <li><a href="members.html" class="nav-item">Member</a></li>
+                <li><a href="publications.html" class="nav-item">Publication</a></li>
+                <li><a href="awards.html" class="nav-item">Award</a></li>
+                <li><a href="contact.html" class="nav-item">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Research Areas</h1>
+            <p>Exploring the frontiers of Haptics and HCI.</p>
+        </div>
+
+        <div id="research-list-container" class="research-list-view">
+            </div>
+
+        <div id="research-detail-container" class="research-detail-view">
+            <button onclick="hideResearchDetail()" class="back-btn"><i class="fas fa-arrow-left"></i> Back to List</button>
+            <div id="research-detail-content"></div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 Interaction Lab. POSTECH.</footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Custom Render for Research Page
+        const listContainer = document.getElementById('research-list-container');
+
+        researchData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'research-card';
+            card.onclick = () => showResearchDetailLocal(item.id);
+            // Thumbnail handling (using placeholder if not found)
+            const imgPath = item.thumbnail ? item.thumbnail : 'images/research_placeholder.jpg';
+
+            card.innerHTML = `
+                <img src="${imgPath}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=Research'">
+                <div class="card-body">
+                    <h3>${item.title}</h3>
+                    <p style="color:#666; font-size:0.9rem;">${item.description.substring(0, 80)}...</p>
+                    <span style="color:var(--primary); font-size:0.85rem; margin-top:10px; display:block;">Read More <i class="fas fa-arrow-right"></i></span>
+                </div>
+            `;
+            listContainer.appendChild(card);
+        });
+
+        function showResearchDetailLocal(id) {
+            const item = researchData.find(r => r.id == id);
+            if(!item) return;
+
+            document.getElementById('research-list-container').style.display = 'none';
+            document.getElementById('research-detail-container').style.display = 'block';
+
+            const content = document.getElementById('research-detail-content');
+            const imgPath = item.thumbnail ? item.thumbnail : 'https://via.placeholder.com/800x400?text=Research+Detail';
+
+            content.innerHTML = `
+                <h2 style="color:var(--primary); margin-bottom:10px;">${item.title}</h2>
+                <p class="highlight" style="font-weight:bold; color:var(--secondary); margin-bottom:20px;">${item.agency || 'Research Project'} | ${item.period}</p>
+                <img src="${imgPath}" style="width:100%; max-height:400px; object-fit:cover; border-radius:12px; margin-bottom:30px;">
+                <div style="line-height:1.8; color:#444;">
+                    <p>${item.description}</p>
+                    <br>
+                    <h3>Project Details</h3>
+                    <ul style="margin-left:20px;">
+                        <li><strong>Funding Agency:</strong> ${item.agency}</li>
+                        <li><strong>Period:</strong> ${item.period}</li>
+                    </ul>
+                </div>
+            `;
+            window.scrollTo(0,0);
+        }
+
+        function hideResearchDetail() {
+            document.getElementById('research-list-container').style.display = 'grid';
+            document.getElementById('research-detail-container').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

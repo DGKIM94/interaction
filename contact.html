@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Interaction Lab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .contact-wrapper { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; }
+        .contact-box { background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); flex: 1; min-width: 300px; text-align: center; }
+        .contact-icon { font-size: 3rem; color: var(--primary); margin-bottom: 20px; }
+        .contact-box h3 { margin-bottom: 15px; font-size: 1.5rem; }
+        .contact-box p { color: #666; line-height: 1.8; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><a href="index.html"><img src="images/logo.png" alt="Lab Logo"></a></div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-item">Home</a></li>
+                <li><a href="news.html" class="nav-item">News</a></li>
+                <li><a href="research.html" class="nav-item">Research</a></li>
+                <li><a href="members.html" class="nav-item">Member</a></li>
+                <li><a href="publications.html" class="nav-item">Publication</a></li>
+                <li><a href="awards.html" class="nav-item">Award</a></li>
+                <li><a href="contact.html" class="nav-item active">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Contact Us</h1>
+        </div>
+
+        <div class="contact-wrapper">
+            <div class="contact-box">
+                <i class="fas fa-map-marker-alt contact-icon"></i>
+                <h3>Location</h3>
+                <p>
+                    Engineering Building 4, Room 125<br>
+                    Department of Computer Science and Engineering<br>
+                    POSTECH, 77 Cheongam-Ro, Nam-Gu<br>
+                    Pohang, Gyeongbuk, 37673, Korea
+                </p>
+            </div>
+
+            <div class="contact-box">
+                <i class="fas fa-envelope contact-icon"></i>
+                <h3>Contact Info</h3>
+                <p>
+                    <strong>Email:</strong> choism@postech.ac.kr<br>
+                    <strong>Phone:</strong> +82-54-279-2384<br>
+                    <strong>Fax:</strong> +82-54-279-2299
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 Interaction Lab. POSTECH.</footer>
+    <script src="script.js"></script>
+</body>
+</html>

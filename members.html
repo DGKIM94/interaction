@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members - Interaction Lab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><a href="index.html"><img src="images/logo.png" alt="Lab Logo"></a></div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-item">Home</a></li>
+                <li><a href="news.html" class="nav-item">News</a></li>
+                <li><a href="research.html" class="nav-item">Research</a></li>
+                <li><a href="members.html" class="nav-item active">Member</a></li>
+                <li><a href="publications.html" class="nav-item">Publication</a></li>
+                <li><a href="awards.html" class="nav-item">Award</a></li>
+                <li><a href="contact.html" class="nav-item">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Members</h1>
+            <p>Meet the team leading the innovation.</p>
+        </div>
+
+        <div class="member-section">
+            <h2 style="border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 30px;">Director</h2>
+            <div id="prof-list" style="display:flex; justify-content:center;">
+                </div>
+            <div id="prof-detail" class="member-detail-panel hidden" style="margin-top: 30px; display: none;">
+                </div>
+        </div>
+
+        <div class="member-section" style="margin-top: 60px;">
+            <h2 style="border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 30px;">Ph.D. Students</h2>
+            <div id="phd-list" class="member-grid">
+                </div>
+        </div>
+
+        <div class="member-section" style="margin-top: 60px;">
+            <h2 style="border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 30px;">Master Students</h2>
+            <div id="ms-list" class="member-grid">
+                </div>
+        </div>
+
+        <div class="member-section" style="margin-top: 60px;">
+            <h2 style="border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 30px;">Alumni</h2>
+            <div id="alumni-list" class="alumni-list">
+                </div>
+        </div>
+    </div>
+
+    <div id="student-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="student-detail-content"></div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 Interaction Lab. POSTECH.</footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Initialize Members Page
+        renderMembers();
+
+        // Modal Logic for this page
+        const modal = document.getElementById('student-modal');
+        const closeBtn = document.querySelector('.close-modal');
+        closeBtn.onclick = () => modal.style.display = "none";
+        window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; }
+    </script>
+</body>
+</html>

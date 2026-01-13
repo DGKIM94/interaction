@@ -3,40 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interaction Lab - POSTECH</title>
+    <title>Publications - Interaction Lab</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo"><a href="index.html"><img src="images/logo.png" alt="Lab Logo"></a></div>
             <ul class="nav-links">
-                <li><a href="index.html" class="nav-item active">Home</a></li>
+                <li><a href="index.html" class="nav-item">Home</a></li>
                 <li><a href="news.html" class="nav-item">News</a></li>
                 <li><a href="research.html" class="nav-item">Research</a></li>
                 <li><a href="members.html" class="nav-item">Member</a></li>
-                <li><a href="publications.html" class="nav-item">Publication</a></li>
+                <li><a href="publications.html" class="nav-item active">Publication</a></li>
                 <li><a href="awards.html" class="nav-item">Award</a></li>
                 <li><a href="contact.html" class="nav-item">Contact</a></li>
             </ul>
         </div>
     </nav>
-    <div class="hero">
-        <div>
-            <h1>Future of Haptic Interaction</h1>
-            <p>POSTECH Interaction Lab explores the cutting-edge of Haptics, VR/AR, and Multimodal Interfaces.</p>
-        </div>
-    </div>
     <div class="container">
-        <h2 class="page-header">Latest News</h2>
-        <div id="home-news" class="member-grid"></div>
-        <br><br>
-        <h2 class="page-header">Research Highlights</h2>
-        <div id="home-research" class="member-grid"></div>
+        <div class="page-header">
+            <h1>Publications</h1>
+        </div>
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterPubs('all', this)">All</button>
+            <button class="filter-btn" onclick="filterPubs('journal', this)">Journal</button>
+            <button class="filter-btn" onclick="filterPubs('conference', this)">Conference</button>
+            <button class="filter-btn" onclick="filterPubs('patent', this)">Patent</button>
+        </div>
+        <div id="pub-list"></div>
     </div>
     <footer>&copy; 2026 Interaction Lab. POSTECH.</footer>
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <script>renderHome();</script>
+    <script>renderPublications();</script>
 </body>
 </html>
