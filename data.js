@@ -67,10 +67,10 @@ const researchAreas = [
 ];
 // 5. YouTube Data (NEW)
 const youtubeVideos = [
-    { id: "video1", title: "Lab Introduction", embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" }, // 예시 URL 교체 필요
-    { id: "video2", title: "Haptic Rendering Demo", embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-    { id: "video3", title: "VR Interaction", embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-    { id: "video4", title: "Research Highlights", embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+    { id: "video1", title: "Lab Introduction", embedUrl: "https://www.youtube.com/watch?v=8CfCvSeBKAA" }, // 예시 URL 교체 필요
+    { id: "video2", title: "Haptic Rendering Demo", embedUrl: "https://www.youtube.com/watch?v=UeT9--by-eQ" },
+    { id: "video3", title: "VR Interaction", embedUrl: "https://www.youtube.com/watch?v=h7YkW53siNs" },
+    { id: "video4", title: "Research Highlights", embedUrl: "https://www.youtube.com/watch?v=edUCvel4Ijc" }
 ];
 // 2. Member Data (CV: Advising + Current Members)
 const memberData = [
