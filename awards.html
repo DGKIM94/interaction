@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Awards - Interaction Lab</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
@@ -28,27 +28,12 @@
             <h1>Awards & Honors</h1>
             <p>Recognition of our research excellence.</p>
         </div>
-        <div id="award-list-container" style="max-width: 900px; margin: 0 auto;">
-            </div>
+        <div id="award-list" style="max-width: 900px; margin: 0 auto;"></div>
     </div>
 
     <footer>&copy; 2026 Interaction Lab. POSTECH.</footer>
-
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <script>
-        const container = document.getElementById('award-list-container');
-        awardData.forEach(item => {
-            container.innerHTML += `
-                <div class="pub-item" style="border-left: 5px solid gold;">
-                    <div class="pub-year" style="color:var(--text-main); font-weight:bold; width:80px;">${item.date}</div>
-                    <div class="pub-content">
-                        <h3 style="color:var(--primary); margin-bottom:5px;">${item.title}</h3>
-                        <p style="color:#555; font-style:italic;">${item.organization}</p>
-                    </div>
-                </div>
-            `;
-        });
-    </script>
+    <script>document.addEventListener('DOMContentLoaded', renderAwardsPage);</script>
 </body>
 </html>

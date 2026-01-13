@@ -1,15 +1,19 @@
 // script.js
 
-/* --- 1. Utility: Overlay --- */
+/* --- 1. 유틸리티: 오버레이 제어 --- */
 function openDetail(html) {
     const overlay = document.getElementById('detail-overlay');
     const body = document.getElementById('detail-body');
+    // 오버레이가 없는 페이지에서 호출 시 에러 방지
     if(overlay && body) {
         body.innerHTML = html;
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+    } else {
+        console.warn("Detail overlay element not found on this page.");
     }
 }
+
 function closeDetail() {
     const overlay = document.getElementById('detail-overlay');
     if(overlay) {
@@ -17,6 +21,14 @@ function closeDetail() {
         document.body.style.overflow = 'auto';
     }
 }
+
+// 오버레이 외부 클릭 시 닫기
+document.addEventListener('click', function(e) {
+    const overlay = document.getElementById('detail-overlay');
+    if(overlay && e.target === overlay) {
+        closeDetail();
+    }
+});
 
 /* --- 2. Home Rendering --- */
 function renderHome() {
@@ -32,14 +44,12 @@ function renderHome() {
         });
     }
 
-    // 2) Latest News (With Images)
+    // 2) Latest News (Home)
     const newsContainer = document.getElementById('home-news');
     if (newsContainer && typeof newsData !== 'undefined') {
         newsContainer.innerHTML = '';
         newsData.slice(0, 3).forEach(item => {
-            // 이미지 없으면 기본 플레이스홀더 처리 가능
-            const imgHtml = item.image ? `<img src="${item.image}" class="news-thumb" alt="${item.title}">` : '';
-            // Data encoded for click
+            const imgHtml = item.image ? `<img src="${item.image}" class="news-thumb" alt="${item.title}" onerror="this.style.display='none'">` : '';
             const dataStr = encodeURIComponent(JSON.stringify(item));
 
             newsContainer.innerHTML += `
@@ -56,14 +66,14 @@ function renderHome() {
     }
 }
 
-/* --- 3. News Logic --- */
+/* --- 3. News Page Rendering --- */
 function renderNewsPage() {
     const container = document.getElementById('news-grid-full');
-    if(!container) return;
+    if(!container || typeof newsData === 'undefined') return;
 
     container.innerHTML = '';
     newsData.forEach(item => {
-        const imgHtml = item.image ? `<img src="${item.image}" class="news-thumb">` : '';
+        const imgHtml = item.image ? `<img src="${item.image}" class="news-thumb" onerror="this.style.display='none'">` : '';
         const dataStr = encodeURIComponent(JSON.stringify(item));
 
         container.innerHTML += `
@@ -81,11 +91,11 @@ function renderNewsPage() {
 
 function showNewsDetail(dataStr) {
     const item = JSON.parse(decodeURIComponent(dataStr));
-    const imgHtml = item.image ? `<img src="${item.image}" class="detail-hero-img">` : '';
+    const imgHtml = item.image ? `<img src="${item.image}" class="detail-hero-img" onerror="this.style.display='none'">` : '';
 
     const html = `
         ${imgHtml}
-        <h1 style="font-size:2.5rem; margin-bottom:10px;">${item.title}</h1>
+        <h1 class="detail-title">${item.title}</h1>
         <p style="color:var(--primary); font-weight:700; margin-bottom:30px;">${item.date}</p>
         <div style="font-size:1.1rem; line-height:1.8; color:#444;">
             ${item.detailContent || item.content}
@@ -94,9 +104,9 @@ function showNewsDetail(dataStr) {
     openDetail(html);
 }
 
-/* --- 4. Research Rendering (Areas + Projects) --- */
+/* --- 4. Research Rendering --- */
 function renderResearchPage() {
-    // 1) Research Areas (Big Cards)
+    // 1) Research Areas
     const areaContainer = document.getElementById('research-areas');
     if (areaContainer && typeof researchAreas !== 'undefined') {
         areaContainer.innerHTML = '';
@@ -104,7 +114,7 @@ function renderResearchPage() {
             const dataStr = encodeURIComponent(JSON.stringify(area));
             areaContainer.innerHTML += `
                 <div class="area-card" onclick="showAreaDetail('${dataStr}')">
-                    <img src="${area.thumbnail}" class="area-img" alt="${area.title}">
+                    <img src="${area.thumbnail}" class="area-img" alt="${area.title}" onerror="this.src='images/lab_intro1.jpg'">
                     <div class="area-content">
                         <h3>${area.title}</h3>
                         <p>${area.desc}</p>
@@ -113,7 +123,7 @@ function renderResearchPage() {
         });
     }
 
-    // 2) Projects List
+    // 2) Projects Lists
     const ongoingList = document.getElementById('ongoing-list');
     const completedList = document.getElementById('completed-list');
 
@@ -146,8 +156,8 @@ function renderResearchPage() {
 function showAreaDetail(dataStr) {
     const area = JSON.parse(decodeURIComponent(dataStr));
     const html = `
-        <img src="${area.thumbnail}" class="detail-hero-img">
-        <h1 style="font-size:2.5rem; margin-bottom:20px;">${area.title}</h1>
+        <img src="${area.thumbnail}" class="detail-hero-img" onerror="this.src='images/lab_intro1.jpg'">
+        <h1 class="detail-title">${area.title}</h1>
         <div style="font-size:1.1rem; line-height:1.8;">${area.detail}</div>
     `;
     openDetail(html);
@@ -157,24 +167,22 @@ function showProjectDetail(dataStr) {
     const proj = JSON.parse(decodeURIComponent(dataStr));
     const html = `
         <span class="proj-status ${proj.status==='Ongoing'?'ongoing':'completed'}" style="font-size:1rem; padding:6px 15px;">${proj.status}</span>
-        <h1 style="margin:15px 0 10px;">${proj.title}</h1>
+        <h1 class="detail-title" style="margin-top:15px;">${proj.title}</h1>
         <p style="color:#666; margin-bottom:30px;"><strong>${proj.agency}</strong> | ${proj.period}</p>
-        <div style="font-size:1.1rem; line-height:1.8; background:#f8fafc; padding:30px; border-radius:20px;">
+        <div class="detail-body">
             ${proj.description}
         </div>
     `;
     openDetail(html);
 }
 
-/* --- 5. Publications (Filters) --- */
+/* --- 5. Publications Rendering --- */
 function renderPublications() {
     const container = document.getElementById('pub-list');
     if (!container) return;
 
-    // 초기 렌더링
     applyPubFilter();
 
-    // 탭 클릭 이벤트
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -188,8 +196,11 @@ function applyPubFilter() {
     const activeTab = document.querySelector('.tab-btn.active');
     const category = activeTab ? activeTab.dataset.cat : 'all';
 
-    const startYear = parseInt(document.getElementById('year-start').value) || 0;
-    const endYear = parseInt(document.getElementById('year-end').value) || 9999;
+    // input 요소가 없을 경우 기본값 처리
+    const startInput = document.getElementById('year-start');
+    const endInput = document.getElementById('year-end');
+    const startYear = startInput ? (parseInt(startInput.value) || 0) : 0;
+    const endYear = endInput ? (parseInt(endInput.value) || 9999) : 9999;
 
     const container = document.getElementById('pub-list');
     container.innerHTML = '';
@@ -206,9 +217,7 @@ function applyPubFilter() {
     }
 
     filtered.forEach(pub => {
-        // Link logic
         const linkHtml = pub.link ? `<a href="${pub.link}" class="pub-link" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : '';
-
         container.innerHTML += `
             <div class="pub-item">
                 <div class="pub-year">${pub.year}</div>
@@ -222,65 +231,77 @@ function applyPubFilter() {
     });
 }
 
-/* --- 3. 맴버 (Member) 렌더링 --- */
+/* --- 6. Members Rendering --- */
 function renderMembers() {
-    // 각 섹션 컨테이너 가져오기
     const profList = document.getElementById('prof-list');
     const phdList = document.getElementById('phd-list');
     const msList = document.getElementById('ms-list');
     const alumniList = document.getElementById('alumni-list');
 
-    // members.html이 아니면 실행 중단
-    if (!profList) return;
+    if(!profList) return;
 
-    if (typeof memberData === 'undefined') return;
-
-    memberData.forEach((m, index) => {
-        // 1. Alumni 처리
+    memberData.forEach(m => {
         if (m.role === 'alumni') {
-            if (alumniList) {
-                alumniList.innerHTML += `
-                    <div class="alumni-item">
-                        <strong>${m.name}</strong>
-                        <span>${m.desc}</span>
-                    </div>`;
-            }
-        }
-        // 2. 교수님 처리
-        else if (m.role === 'prof') {
-            profList.innerHTML += createMemberCard(m, index);
-        }
-        // 3. 학생 처리
-        else {
-            if (m.desc.includes('Ph.D') || m.desc.includes('Direct') || m.desc.includes('Post')) {
-                phdList.innerHTML += createMemberCard(m, index);
-            } else if (m.desc.includes('Master') || m.desc.includes('M.S')) {
-                msList.innerHTML += createMemberCard(m, index);
-            }
+            alumniList.innerHTML += `
+                <div class="alumni-item">
+                    <strong>${m.name}</strong>
+                    <span>${m.desc}</span>
+                </div>`;
+        } else {
+            const card = createMemberCard(m);
+            if (m.role === 'prof') profList.innerHTML += card;
+            else if (m.desc.includes('Ph.D') || m.desc.includes('Direct') || m.desc.includes('Post')) phdList.innerHTML += card;
+            else if (m.desc.includes('Master') || m.desc.includes('M.S')) msList.innerHTML += card;
         }
     });
 }
 
-function createMemberCard(m, idx) {
+function createMemberCard(m) {
     const dataStr = encodeURIComponent(JSON.stringify(m));
-    return `<div class="member-card" onclick="showMemberDetail('${dataStr}')">
-        <img src="${m.image}" onerror="this.src='images/member_placeholder.png'">
-        <span class="role-text">${m.desc.split(',')[0]}</span>
-        <h3>${m.name}</h3>
-    </div>`;
+    return `
+        <div class="member-card" onclick="showMemberDetail('${dataStr}')">
+            <img src="${m.image}" onerror="this.src='images/member_placeholder.png'">
+            <span class="role-text">${m.desc.split(',')[0]}</span>
+            <h3>${m.name}</h3>
+        </div>`;
 }
-// showMemberDetail은 JSON 파싱해서 오버레이 띄우는 함수 (위의 News/Research와 동일 방식)
 
+function showMemberDetail(dataStr) {
+    const m = JSON.parse(decodeURIComponent(dataStr));
+    let extraInfo = '';
+
+    if (m.detail) {
+        if(m.detail.education) extraInfo += `<div class="info-group"><h4>Education</h4><ul>${m.detail.education.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+        if(m.detail.position) extraInfo += `<div class="info-group"><h4>Positions</h4><ul>${m.detail.position.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+        if(m.detail.membership) extraInfo += `<div class="info-group"><h4>Memberships</h4><ul>${m.detail.membership.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+    } else {
+        extraInfo = `<div class="info-group"><h4>Info</h4><p>${m.desc}</p><p>${m.email || ''}</p></div>`;
+    }
+
+    const html = `
+        <div class="detail-header-center">
+            <img src="${m.image}" class="detail-img-lg" onerror="this.src='images/member_placeholder.png'">
+            <h1 class="detail-title">${m.name}</h1>
+            <p class="detail-email">${m.email || ''}</p>
+        </div>
+        <div class="detail-body">${extraInfo}</div>
+    `;
+    openDetail(html);
+}
+
+/* --- 7. Awards Rendering --- */
 function renderAwardsPage() {
-    const list = document.getElementById('award-list');
-    if(!list) return;
-    awardData.forEach(a => {
-        list.innerHTML += `
+    const container = document.getElementById('award-list'); // HTML ID 확인 필수
+    if(!container || typeof awardData === 'undefined') return;
+
+    container.innerHTML = '';
+    awardData.forEach(item => {
+        container.innerHTML += `
             <div class="pub-item award-item-style">
-                <div class="pub-year">${a.date}</div>
-                <div>
-                    <h3 style="margin:0 0 5px;">${a.title}</h3>
-                    <div style="color:#666;">${a.organization}</div>
+                <div class="pub-year">${item.date}</div>
+                <div class="pub-content">
+                    <h3>${item.title}</h3>
+                    <div class="pub-venue">${item.organization}</div>
                 </div>
             </div>`;
     });
