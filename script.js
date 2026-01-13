@@ -1,166 +1,246 @@
 // script.js
 
+// 1. Navigation Logic (SPA Routing)
+function navigateTo(pageId) {
+    // 1. Update Navbar Active State
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if(item.getAttribute('onclick').includes(pageId)) {
+            item.classList.add('active');
+        }
+    });
+
+    // 2. Hide All Views
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active-view');
+    });
+
+    // 3. Show Target View
+    const target = document.getElementById(pageId);
+    if(target) {
+        target.classList.add('active-view');
+        window.scrollTo(0, 0); // Scroll to top
+    }
+
+    // Special Case: Reset Detail Views
+    document.getElementById('prof-detail').classList.add('hidden');
+}
+
+// 2. Render Functions (Executed on Load)
 document.addEventListener('DOMContentLoaded', () => {
-    initNews();
-    renderMembers();
+    renderHome();
+    renderNews();
     renderResearch();
-    initPublications();
+    renderMembers();
+    renderPublications();
     renderAwards();
 });
 
-/* --- 1. News Slider --- */
-let currentNewsIndex = 0;
-function initNews() {
-    // 최근 5개만 가져오기
-    const recentNews = newsData.slice(0, 5);
-    const display = document.getElementById('news-display');
+/* --- Home Rendering --- */
+function renderHome() {
+    // News (Top 3)
+    const newsContainer = document.getElementById('home-news-container');
+    const recentNews = newsData.slice(0, 3);
 
-    function showNews(index) {
-        if(recentNews.length === 0) return;
-        const item = recentNews[index];
-        display.innerHTML = `
-            <h3>${item.title}</h3>
-            <p class="news-date" style="color:#666; font-size:0.9rem; margin-bottom:10px;">${item.date}</p>
-            <p>${item.content}</p>
-        `;
-    }
-
-    document.getElementById('prevBtn').addEventListener('click', () => {
-        currentNewsIndex = (currentNewsIndex - 1 + recentNews.length) % recentNews.length;
-        showNews(currentNewsIndex);
-    });
-
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        currentNewsIndex = (currentNewsIndex + 1) % recentNews.length;
-        showNews(currentNewsIndex);
-    });
-
-    // 초기 로드
-    showNews(0);
-}
-
-/* --- 2. Members --- */
-function renderMembers() {
-    const containers = {
-        prof: document.getElementById('member-prof'),
-        student: document.getElementById('member-student'),
-        alumni: document.getElementById('member-alumni')
-    };
-
-    memberData.forEach(member => {
-        const card = document.createElement('div');
-        card.className = 'member-card';
-        card.innerHTML = `
-            <img src="${member.image}" alt="${member.name}">
-            <div class="member-name">${member.name}</div>
-            <div class="member-role">${member.desc}</div>
-            <div class="member-email"><small>${member.email}</small></div>
-        `;
-        if(containers[member.role]) {
-            containers[member.role].appendChild(card);
-        }
-    });
-}
-
-/* --- 3. Research Modal --- */
-function renderResearch() {
-    const list = document.getElementById('research-list');
-    const modal = document.getElementById('research-modal');
-    const closeBtn = document.querySelector('.close-btn');
-
-    researchData.forEach(item => {
+    recentNews.forEach(item => {
         const div = document.createElement('div');
-        div.className = 'research-item';
+        div.className = 'research-card'; // Reuse styling
         div.innerHTML = `
-            <img src="${item.thumbnail}" alt="${item.title}">
-            <div class="research-info">
+            <div class="card-body">
+                <small style="color:var(--primary)">${item.date}</small>
                 <h3>${item.title}</h3>
+                <p>${item.content.substring(0, 60)}...</p>
             </div>
         `;
-        // 클릭 시 모달 열기
-        div.addEventListener('click', () => {
-            document.getElementById('modal-title').innerText = item.title;
-            document.getElementById('modal-img').src = item.thumbnail;
-            document.getElementById('modal-desc').innerText = item.description;
-            modal.style.display = "block";
-        });
-        list.appendChild(div);
+        newsContainer.appendChild(div);
     });
 
-    closeBtn.onclick = () => modal.style.display = "none";
-    window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; }
+    // Research Highlights (Top 4)
+    const researchContainer = document.getElementById('home-research-container');
+    const highlights = researchData.slice(0, 4);
+
+    highlights.forEach(item => {
+        const card = createResearchCard(item);
+        researchContainer.appendChild(card);
+    });
 }
 
-/* --- 4. Publications Filter --- */
-function initPublications() {
-    const container = document.getElementById('pub-list');
-    const tabs = document.querySelectorAll('.tab-btn');
-    const yearStartInput = document.getElementById('year-start');
-    const yearEndInput = document.getElementById('year-end');
-    const applyBtn = document.getElementById('apply-filter');
+function createResearchCard(item) {
+    const div = document.createElement('div');
+    div.className = 'research-card';
+    div.onclick = () => showResearchDetail(item.id);
+    div.innerHTML = `
+        <img src="${item.thumbnail}" alt="${item.title}">
+        <div class="card-body">
+            <h3>${item.title}</h3>
+            <p>${item.description.substring(0, 80)}...</p>
+        </div>
+    `;
+    return div;
+}
 
-    let currentCategory = 'all';
+/* --- Research Detail Logic --- */
+function showResearchDetail(id) {
+    const item = researchData.find(r => r.id == id);
+    if(!item) return;
 
-    function renderPubs() {
-        container.innerHTML = '';
-        const startYear = parseInt(yearStartInput.value) || 0;
-        const endYear = parseInt(yearEndInput.value) || 9999;
+    // Switch to detail view
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
+    document.getElementById('research-detail').classList.add('active-view');
 
-        const filtered = publicationData.filter(pub => {
-            const matchCat = currentCategory === 'all' || pub.category === currentCategory;
-            const matchYear = pub.year >= startYear && pub.year <= endYear;
-            return matchCat && matchYear;
-        });
+    const content = document.getElementById('research-detail-content');
+    content.innerHTML = `
+        <div class="detail-header">
+            <h1>${item.title}</h1>
+            <p class="highlight">${item.agency || 'Research Project'}</p>
+        </div>
+        <img src="${item.thumbnail}" alt="${item.title}" class="detail-img">
+        <div class="detail-body">
+            <p>${item.description}</p>
+            <br>
+            <h3>Project Details</h3>
+            <ul>
+                <li><strong>Period:</strong> ${item.period || 'Ongoing'}</li>
+                <li><strong>Agency:</strong> ${item.agency || 'N/A'}</li>
+            </ul>
+        </div>
+    `;
+    window.scrollTo(0,0);
+}
 
-        // 최신순 정렬
-        filtered.sort((a,b) => b.year - a.year);
+/* --- Member Logic --- */
+function renderMembers() {
+    const profContainer = document.getElementById('prof-container');
+    const phdGrid = document.getElementById('phd-grid');
+    const msGrid = document.getElementById('ms-grid');
+    const alumniList = document.getElementById('alumni-list');
 
-        if(filtered.length === 0) {
-            container.innerHTML = '<p>해당 조건의 논문이 없습니다.</p>';
-            return;
-        }
-
-        filtered.forEach(pub => {
+    memberData.forEach(member => {
+        if (member.role === 'prof') {
+            profContainer.innerHTML = createMemberCard(member, true);
+        } else if (member.desc.includes('Ph.D. Student') || member.desc.includes('Direct')) {
+            phdGrid.appendChild(createMemberCardHTML(member));
+        } else if (member.desc.includes('Master') || member.desc.includes('M.S.')) {
+            msGrid.appendChild(createMemberCardHTML(member));
+        } else if (member.role === 'alumni') {
             const div = document.createElement('div');
-            div.className = 'pub-item';
-            div.innerHTML = `
-                <div class="pub-year">${pub.year}</div>
-                <div class="pub-details">
-                    <h4>${pub.title}</h4>
-                    <p>${pub.authors}</p>
-                    <p class="pub-venue">${pub.venue}</p>
+            div.className = 'alumni-item';
+            div.innerHTML = `<strong>${member.name}</strong> <span>${member.desc}</span>`;
+            alumniList.appendChild(div);
+        }
+    });
+}
+
+function createMemberCardHTML(member) {
+    const div = document.createElement('div');
+    div.className = 'member-card';
+    div.onclick = () => showStudentModal(member);
+    div.innerHTML = `
+        <img src="${member.image}" alt="${member.name}">
+        <div class="role-badge">${member.desc.split(',')[0]}</div>
+        <h3>${member.name}</h3>
+        <p>${member.email}</p>
+    `;
+    return div;
+}
+
+function createMemberCard(member, isProf) {
+    return `
+        <div class="member-card" style="max-width:300px; margin:0 auto;" onclick="toggleProfDetail()">
+            <img src="${member.image}" alt="${member.name}">
+            <h3>${member.name}</h3>
+            <p>${member.desc}</p>
+            <p style="color:var(--primary); margin-top:10px; font-weight:bold;">Click for Details <i class="fas fa-chevron-down"></i></p>
+        </div>
+    `;
+}
+
+function toggleProfDetail() {
+    const detailPanel = document.getElementById('prof-detail');
+    const member = memberData.find(m => m.role === 'prof');
+
+    if (detailPanel.classList.contains('hidden')) {
+        detailPanel.classList.remove('hidden');
+        detailPanel.innerHTML = `
+            <div class="prof-detail-view">
+                <img src="${member.image}" class="prof-img-large">
+                <div class="prof-info">
+                    <h2>${member.name}</h2>
+                    <p class="prof-meta">${member.desc}</p>
+                    <div class="prof-section">
+                        <h4>Contact</h4>
+                        <p><i class="fas fa-envelope"></i> ${member.email}</p>
+                        <p><i class="fas fa-globe"></i> <a href="http://www.postech.ac.kr/~choism" target="_blank">Personal Website</a></p>
+                    </div>
+                    <div class="prof-section">
+                        <h4>Education</h4>
+                        <ul>
+                            <li><strong>Ph.D.</strong> Purdue University (2003)</li>
+                            <li><strong>M.S.</strong> Seoul National University (1997)</li>
+                            <li><strong>B.S.</strong> Seoul National University (1995)</li>
+                        </ul>
+                    </div>
+                    <div class="prof-section">
+                        <h4>Professional Positions</h4>
+                        <ul>
+                            <li>Head, Dept. of CSE, POSTECH</li>
+                            <li>Professor, POSTECH</li>
+                            <li>Outside Director, bHaptics</li>
+                        </ul>
+                    </div>
+                     <div class="prof-section">
+                        <h4>Memberships</h4>
+                        <ul>
+                            <li>IEEE Senior Member</li>
+                            <li>ACM Member</li>
+                            <li>Korea Robotics Society (Lifetime)</li>
+                        </ul>
+                    </div>
                 </div>
-            `;
-            container.appendChild(div);
-        });
-    }
-
-    // 탭 클릭 이벤트
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            currentCategory = tab.getAttribute('data-cat');
-            renderPubs();
-        });
-    });
-
-    // 년도 필터 적용 이벤트
-    applyBtn.addEventListener('click', renderPubs);
-
-    // 초기 렌더링
-    renderPubs();
-}
-
-/* --- 5. Awards --- */
-function renderAwards() {
-    const list = document.getElementById('award-list');
-    awardData.forEach(award => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <span class="award-date">${award.date}</span>
-            <span class="award-content"><strong>${award.title}</strong> - ${award.organization}</span>
+            </div>
+            <div style="text-align:center;"><button class="filter-btn" onclick="document.getElementById('prof-detail').classList.add('hidden')">Close Details</button></div>
         `;
-        list.appendChild(li);
-    });
+    } else {
+        detailPanel.classList.add('hidden');
+    }
 }
+
+function showStudentModal(member) {
+    const modal = document.getElementById('student-modal');
+    const content = document.getElementById('student-detail-content');
+    content.innerHTML = `
+        <div style="text-align:center;">
+            <img src="${member.image}" style="width:150px; height:150px; border-radius:50%; object-fit:cover; border:3px solid var(--primary);">
+            <h2 style="margin:15px 0;">${member.name}</h2>
+            <p class="role-badge">${member.desc}</p>
+            <p><i class="fas fa-envelope"></i> ${member.email}</p>
+            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+            <p>Research Interests: Haptics, VR, HCI</p>
+        </div>
+    `;
+    modal.style.display = 'block';
+
+    document.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; }
+}
+
+/* --- Publications --- */
+function renderPublications() {
+    const container = document.getElementById('pub-list');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    // Populate Select
+    // Logic to populate years omitted for brevity, hardcode in data.js or loop
+
+    function filter(category) {
+        container.innerHTML = '';
+        publicationData.forEach(pub => {
+            if(category === 'all' || pub.category === category) {
+                const div = document.createElement('div');
+                div.className = `pub-item ${pub.category}`;
+                div.innerHTML = `
+                    <div class="pub-year"><strong>${pub.year}</strong></div>
+                    <div class="pub-content">
+                        <h3>${pub.title}</h3>
+                        <p class="pub-authors">${pub.authors}</p>
+                        <p class="pub-venue">${pub.venue}</p

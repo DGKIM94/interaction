@@ -6,126 +6,197 @@
     <title>Interaction Lab - POSTECH</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="container nav-container">
-            <div class="logo">
-                <img src="images/logo.png" alt="Interaction Lab Logo"> </div>
+        <div class="nav-container">
+            <div class="logo" onclick="navigateTo('home')">
+                <img src="images/logo.png" alt="Interaction Lab">
+            </div>
             <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#news">News</a></li>
-                <li><a href="#research">Research</a></li>
-                <li><a href="#members">Member</a></li>
-                <li><a href="#publications">Publication</a></li>
-                <li><a href="#awards">Award</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#" onclick="navigateTo('home')" class="nav-item active">Home</a></li>
+                <li><a href="#" onclick="navigateTo('news')" class="nav-item">News</a></li>
+                <li><a href="#" onclick="navigateTo('research')" class="nav-item">Research</a></li>
+                <li><a href="#" onclick="navigateTo('members')" class="nav-item">Member</a></li>
+                <li><a href="#" onclick="navigateTo('publications')" class="nav-item">Publication</a></li>
+                <li><a href="#" onclick="navigateTo('awards')" class="nav-item">Award</a></li>
+                <li><a href="#" onclick="navigateTo('contact')" class="nav-item">Contact</a></li>
             </ul>
+            <div class="mobile-menu-btn"><i class="fas fa-bars"></i></div>
         </div>
     </nav>
 
-    <section id="home" class="section">
-        <div class="container">
-            <div class="intro-text">
-                <h1>Welcome to Interaction Lab</h1>
-                <p>We explore the future of Human-Computer Interaction, focusing on Haptics, VR/AR, and Multimodal Interfaces.</p>
-            </div>
-            <div class="intro-images">
-                <img src="https://via.placeholder.com/800x400" alt="Lab Environment">
+    <main id="main-content">
+
+        <section id="home" class="view active-view">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Future of <br><span class="highlight">Haptic Interaction</span></h1>
+                    <p>POSTECH Interaction Lab explores the cutting-edge of Haptics, VR/AR, and Multimodal Interfaces.</p>
+                </div>
             </div>
 
-            <div class="news-slider-container">
-                <h2>Latest News</h2>
-                <div class="news-wrapper">
-                    <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
-                    <div class="news-content" id="news-display">
+            <div class="container">
+                <div class="section-title">
+                    <h2>About Us</h2>
+                    <p>We bridge the physical and digital worlds.</p>
+                </div>
+                <div class="lab-intro">
+                    <img src="images/lab_intro1.jpg" alt="Lab Intro" class="intro-img">
+                    <div class="intro-desc">
+                        <p>Our research focuses on haptic rendering, virtual reality, and human-computer interaction to create immersive and realistic experiences.</p>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <h2>Latest News</h2>
+                </div>
+                <div class="news-slider">
+                    <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="news-card-wrapper" id="home-news-container">
                         </div>
-                    <button id="nextBtn" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <div class="section-title">
+                    <h2>Research Highlights</h2>
+                    <a href="#" onclick="navigateTo('research')" class="view-all-link">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="research-grid highlight-grid" id="home-research-container">
+                    </div>
+            </div>
+        </section>
+
+        <section id="news" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Lab News</h1>
+                    <p>Latest updates and announcements.</p>
+                </div>
+                <div class="news-list" id="full-news-list">
+                    </div>
+            </div>
+        </section>
+
+        <section id="research" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Research Areas</h1>
+                    <p>Our core research topics and projects.</p>
+                </div>
+                <div class="research-grid" id="full-research-grid">
+                    </div>
+            </div>
+        </section>
+
+        <section id="research-detail" class="view">
+            <div class="container">
+                <button onclick="navigateTo('research')" class="back-btn"><i class="fas fa-arrow-left"></i> Back to List</button>
+                <div id="research-detail-content">
+                    </div>
+            </div>
+        </section>
+
+        <section id="members" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Members</h1>
+                </div>
+
+                <div class="member-section">
+                    <h3>Director</h3>
+                    <div id="prof-container"></div>
+                </div>
+
+                <div id="prof-detail" class="member-detail-panel hidden">
+                    </div>
+
+                <div class="member-section">
+                    <h3>Ph.D. Students</h3>
+                    <div class="member-grid" id="phd-grid"></div>
+                </div>
+                <div class="member-section">
+                    <h3>Master Students</h3>
+                    <div class="member-grid" id="ms-grid"></div>
+                </div>
+
+                <div id="student-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <div id="student-detail-content"></div>
+                    </div>
+                </div>
+
+                <div class="member-section">
+                    <h3>Alumni</h3>
+                    <div class="alumni-list" id="alumni-list"></div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="research" class="section">
-        <div class="container">
-            <h2>Research</h2>
-            <div class="research-grid" id="research-list">
+        <section id="publications" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Publications</h1>
                 </div>
-        </div>
-        <div id="research-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h3 id="modal-title"></h3>
-                <img id="modal-img" src="" alt="">
-                <p id="modal-desc"></p>
-            </div>
-        </div>
-    </section>
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="journal">Journal</button>
+                    <button class="filter-btn" data-filter="conference">Conference</button>
+                    <button class="filter-btn" data-filter="patent">Patent</button>
 
-    <section id="members" class="section">
-        <div class="container">
-            <h2>Members</h2>
-            <div class="member-group">
-                <h3>Professor</h3>
-                <div class="member-grid" id="member-prof"></div>
-            </div>
-            <div class="member-group">
-                <h3>Students</h3>
-                <div class="member-grid" id="member-student"></div>
-            </div>
-            <div class="member-group">
-                <h3>Alumni</h3>
-                <div class="member-grid" id="member-alumni"></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="publications" class="section">
-        <div class="container">
-            <h2>Publications</h2>
-
-            <div class="pub-controls">
-                <div class="pub-tabs">
-                    <button class="tab-btn active" data-cat="all">All</button>
-                    <button class="tab-btn" data-cat="conference">Conference</button>
-                    <button class="tab-btn" data-cat="journal">Journal</button>
-                    <button class="tab-btn" data-cat="patent">Patent</button>
+                    <div class="year-select">
+                        <select id="pub-year-filter">
+                            <option value="all">All Years</option>
+                            </select>
+                    </div>
                 </div>
-                <div class="year-filter">
-                    <label>Year:</label>
-                    <input type="number" id="year-start" placeholder="Start (e.g. 2020)">
-                    <span>~</span>
-                    <input type="number" id="year-end" placeholder="End (e.g. 2026)">
-                    <button id="apply-filter">Apply</button>
+                <div class="pub-list-container" id="pub-list">
+                    </div>
+            </div>
+        </section>
+
+        <section id="awards" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Awards & Honors</h1>
+                </div>
+                <div class="timeline" id="award-list">
+                    </div>
+            </div>
+        </section>
+
+        <section id="contact" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Contact Us</h1>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Location</h3>
+                        <p>Engineering Building 4, Room 125<br>POSTECH, Pohang, Korea</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p>contact@interactionlab.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <h3>Phone</h3>
+                        <p>+82-54-279-2384</p>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="pub-list" id="pub-list">
-                </div>
-        </div>
-    </section>
-
-    <section id="awards" class="section">
-        <div class="container">
-            <h2>Awards</h2>
-            <ul class="award-list" id="award-list">
-                </ul>
-        </div>
-    </section>
-
-    <section id="contact" class="section">
-        <div class="container">
-            <h2>Contact</h2>
-            <div class="contact-info">
-                <p><strong>Location:</strong> POSTECH, Pohang, South Korea</p>
-                <p><strong>Email:</strong> contact@interactionlab.com</p>
-            </div>
-        </div>
-    </section>
+    </main>
 
     <footer>
-        <p>&copy; 2026 Interaction Lab. All Rights Reserved.</p>
+        <p>&copy; 2026 Interaction Lab. POSTECH.</p>
     </footer>
 
     <script src="data.js"></script>
