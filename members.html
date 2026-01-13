@@ -24,39 +24,33 @@
     </nav>
 
     <div class="container">
-        <div class="page-header">
-            <h1>Our Team</h1>
-            <p>Researchers passionate about haptic interaction.</p>
+        <div style="text-align:center; margin-bottom:60px;">
+            <h1 style="font-size:2.5rem; color:var(--dark);">Our Team</h1>
         </div>
 
-        <h2 class="section-title">Director</h2>
-        <div id="prof-list" class="member-grid"></div>
+        <div class="section-header"><h2>Director</h2></div>
+        <div id="prof-list" class="member-grid" style="display:flex; justify-content:center;"></div>
 
-        <h2 class="section-title">Ph.D. Students</h2>
+        <div class="section-header"><h2>Ph.D. Students</h2></div>
         <div id="phd-list" class="member-grid"></div>
 
-        <h2 class="section-title">Master Students</h2>
+        <div class="section-header"><h2>Master Students</h2></div>
         <div id="ms-list" class="member-grid"></div>
 
-        <h2 class="section-title">Alumni</h2>
-        <div id="alumni-list" class="alumni-list"></div>
+        <div class="section-header"><h2>Alumni</h2></div>
+        <div id="alumni-list" class="research-list-container" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"></div>
     </div>
 
-    <div id="member-modal" class="modal-overlay">
-        <div class="modal-container">
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-            <div class="modal-content" id="modal-body">
-                </div>
+    <div id="detail-overlay" class="detail-overlay">
+        <div class="detail-nav">
+            <button class="back-btn" onclick="closeDetail()"><i class="fas fa-arrow-left"></i> Back to Members</button>
         </div>
+        <div class="detail-content" id="detail-body"></div>
     </div>
 
     <footer>&copy; 2026 Interaction Lab. POSTECH.</footer>
-
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <script>
-        // 페이지 로드 시 실행
-        renderMembers();
-    </script>
+    <script>renderMembers();</script>
 </body>
 </html>

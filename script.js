@@ -1,137 +1,222 @@
 // script.js
 
-// 1. Members Rendering Logic
+/* --- 1. Common Utility: Detail Overlay Control --- */
+function openDetail(htmlContent) {
+    const overlay = document.getElementById('detail-overlay');
+    const body = document.getElementById('detail-body');
+    body.innerHTML = htmlContent;
+    overlay.classList.add('active'); // CSS slide-up animation
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeDetail() {
+    const overlay = document.getElementById('detail-overlay');
+    overlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+/* --- 2. Home Rendering --- */
+function renderHome() {
+    // News
+    const newsContainer = document.getElementById('home-news');
+    if (newsContainer) {
+        newsData.slice(0, 3).forEach(item => {
+            newsContainer.innerHTML += `
+                <div class="news-card">
+                    <span class="news-date">${item.date}</span>
+                    <h3 style="font-size:1.1rem; margin:5px 0;">${item.title}</h3>
+                    <p style="color:#666; font-size:0.9rem;">${item.content}</p>
+                </div>`;
+        });
+    }
+
+    // Research Highlights (Ongoing first)
+    const resContainer = document.getElementById('home-research');
+    if (resContainer) {
+        const highlights = researchData.filter(r => r.status === 'Ongoing').slice(0, 4);
+        highlights.forEach(item => {
+            resContainer.innerHTML += `
+                <div class="member-card">
+                    <div style="background:${item.status==='Ongoing'?'var(--primary)':'#ccc'}; height:5px; width:100%; position:absolute; top:0; left:0;"></div>
+                    <h3 style="margin-top:15px;">${item.title}</h3>
+                    <p style="font-size:0.9rem; color:#666;">${item.description.substring(0, 60)}...</p>
+                </div>`;
+        });
+    }
+}
+
+/* --- 3. Members Rendering --- */
 function renderMembers() {
     const profList = document.getElementById('prof-list');
     const phdList = document.getElementById('phd-list');
     const msList = document.getElementById('ms-list');
     const alumniList = document.getElementById('alumni-list');
 
-    if (!profList) return; // members.html이 아닐 경우 중단
+    if (!profList) return;
 
-    memberData.forEach((m, index) => {
-        // [수정된 로직] Alumni는 무조건 Alumni 섹션으로 보냄 (학위와 무관)
+    memberData.forEach(m => {
         if (m.role === 'alumni') {
             alumniList.innerHTML += `
-                <div class="alumni-item">
-                    <strong>${m.name}</strong>
-                    <span>${m.desc}</span>
+                <div class="research-item completed" style="padding:15px; min-height:auto;">
+                    <div>
+                        <strong style="color:var(--dark); font-size:1.1rem;">${m.name}</strong><br>
+                        <span style="color:#777; font-size:0.9rem;">${m.desc}</span>
+                    </div>
                 </div>`;
-        }
-        // 교수님
-        else if (m.role === 'prof') {
-            profList.innerHTML += createMemberCard(m, index);
-        }
-        // 학생 분류 (Alumni가 아닌 경우에만 체크)
-        else {
-            if (m.desc.includes('Ph.D') || m.desc.includes('Direct') || m.desc.includes('Post-Doc')) {
-                phdList.innerHTML += createMemberCard(m, index);
-            } else if (m.desc.includes('Master') || m.desc.includes('M.S')) {
-                msList.innerHTML += createMemberCard(m, index);
-            }
+        } else if (m.role === 'prof') {
+            profList.innerHTML += createMemberCard(m);
+        } else if (m.desc.includes('Ph.D') || m.desc.includes('Direct') || m.desc.includes('Post')) {
+            phdList.innerHTML += createMemberCard(m);
+        } else if (m.desc.includes('Master') || m.desc.includes('M.S')) {
+            msList.innerHTML += createMemberCard(m);
         }
     });
 }
 
-// 멤버 카드 생성 함수 (클릭 이벤트 추가)
-function createMemberCard(member, index) {
+function createMemberCard(m) {
+    // Data passed via onclick using encoded JSON to avoid quote issues
+    const dataStr = encodeURIComponent(JSON.stringify(m));
     return `
-        <div class="member-card" onclick="openMemberModal(${index})">
-            <img src="${member.image}" onerror="this.src='images/member_placeholder.jpg'" alt="${member.name}">
-            <span class="role-badge">${member.desc.split(',')[0]}</span>
-            <h3>${member.name}</h3>
-            <p>${member.email || 'Contact Info'}</p>
+        <div class="member-card" onclick="showMemberDetail('${dataStr}')">
+            <img src="${m.image}" onerror="this.src='images/member_placeholder.jpg'">
+            <span class="role-text">${m.desc.split(',')[0]}</span>
+            <h3>${m.name}</h3>
+            <p style="font-size:0.85rem; color:#888;">${m.email || ''}</p>
+        </div>`;
+}
+
+function showMemberDetail(dataStr) {
+    const m = JSON.parse(decodeURIComponent(dataStr));
+
+    // Construct Detail HTML
+    let extraInfo = '';
+    if (m.detail) {
+        if(m.detail.education) extraInfo += `<div class="info-row"><div class="info-label">Education</div><ul class="info-list">${m.detail.education.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+        if(m.detail.position) extraInfo += `<div class="info-row"><div class="info-label">Positions</div><ul class="info-list">${m.detail.position.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+        if(m.detail.membership) extraInfo += `<div class="info-row"><div class="info-label">Memberships</div><ul class="info-list">${m.detail.membership.map(e=>`<li>${e}</li>`).join('')}</ul></div>`;
+    } else {
+        extraInfo = `<div class="info-row"><div class="info-label">Interest</div><div>Haptics, Virtual Reality, HCI</div></div>`;
+    }
+
+    const html = `
+        <div class="detail-header-group">
+            <img src="${m.image}" class="detail-img-lg" onerror="this.src='images/member_placeholder.jpg'">
+            <h1 class="detail-title">${m.name}</h1>
+            <span class="detail-subtitle">${m.desc}</span>
+            <p style="margin-top:10px; color:#666;">${m.email}</p>
+        </div>
+        <div class="detail-body">
+            ${extraInfo}
         </div>
     `;
+    openDetail(html);
 }
 
-// 2. Modal Logic (Detail View)
-function openMemberModal(index) {
-    const member = memberData[index];
-    const modal = document.getElementById('member-modal');
-    const body = document.getElementById('modal-body');
+/* --- 4. Research Rendering --- */
+function renderResearchPage() {
+    const ongoingContainer = document.getElementById('ongoing-research');
+    const completedContainer = document.getElementById('completed-research');
 
-    // 교수님일 경우 상세 정보 표시 (CV 데이터 활용)
-    let detailsHtml = '';
-    if (member.role === 'prof' && member.detail) {
-        detailsHtml = `
-            <div class="modal-info">
-                <h4><i class="fas fa-university"></i> Education</h4>
-                <ul>${member.detail.education.map(e => `<li>${e}</li>`).join('')}</ul>
-                <br>
-                <h4><i class="fas fa-briefcase"></i> Positions</h4>
-                <ul>${member.detail.position.map(p => `<li>${p}</li>`).join('')}</ul>
-            </div>`;
-    } else {
-        // 학생일 경우 기본 정보
-        detailsHtml = `
-            <div class="modal-info">
-                <p><i class="fas fa-envelope"></i> ${member.email || 'N/A'}</p>
-                <p><i class="fas fa-graduation-cap"></i> ${member.desc}</p>
-                <p><i class="fas fa-flask"></i> Research Interest: Haptics, VR, HCI</p>
-            </div>`;
-    }
+    if(!ongoingContainer) return;
 
-    body.innerHTML = `
-        <img src="${member.image}" class="modal-img" onerror="this.src='images/member_placeholder.jpg'">
-        <h2 class="modal-name">${member.name}</h2>
-        <span class="modal-role">${member.role === 'prof' ? 'Professor' : 'Researcher'}</span>
-        ${detailsHtml}
-    `;
-
-    modal.style.display = 'flex'; // flex로 설정해야 중앙 정렬됨
-}
-
-function closeModal() {
-    document.getElementById('member-modal').style.display = 'none';
-}
-
-// 외부 클릭 시 모달 닫기
-window.onclick = function(event) {
-    const modal = document.getElementById('member-modal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// 3. Publications Rendering (기존 유지)
-function renderPublications() {
-    const list = document.getElementById('pub-list');
-    if(!list) return;
-
-    // ... (기존 필터 로직 유지, 필요 시 추가) ...
-    // 초기 렌더링
-    filterPubs('all', document.querySelector('.filter-btn'));
-}
-
-function filterPubs(category, btn) {
-    if(btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    const container = document.getElementById('pub-list');
-    container.innerHTML = '';
-
-    publicationData.forEach(pub => {
-        if(category === 'all' || pub.category === category) {
-            const linkHtml = pub.link ? `<a href="${pub.link}" target="_blank" class="pub-link"><i class="fas fa-external-link-alt"></i></a>` : '';
-            container.innerHTML += `
-                <div class="pub-item">
-                    <div class="pub-year">${pub.year}</div>
-                    <div class="pub-content">
-                        <h3>${pub.title}</h3>
-                        <div class="pub-authors">${pub.authors}</div>
-                        <div class="pub-venue">${pub.venue}</div>
-                    </div>
-                    ${linkHtml}
-                </div>`;
+    researchData.forEach(r => {
+        const cardHTML = createResearchItem(r);
+        if (r.status === 'Ongoing') {
+            ongoingContainer.innerHTML += cardHTML;
+        } else {
+            completedContainer.innerHTML += cardHTML;
         }
+    });
+}
+
+function createResearchItem(r) {
+    const dataStr = encodeURIComponent(JSON.stringify(r));
+    return `
+        <div class="research-item ${r.status.toLowerCase()}" onclick="showResearchDetail('${dataStr}')">
+            <div class="res-info">
+                <h3>${r.title}</h3>
+                <div class="res-meta">
+                    <strong>${r.agency}</strong> | ${r.period}
+                </div>
+            </div>
+            <i class="fas fa-chevron-right arrow-icon"></i>
+        </div>`;
+}
+
+function showResearchDetail(dataStr) {
+    const r = JSON.parse(decodeURIComponent(dataStr));
+    const statusColor = r.status === 'Ongoing' ? 'var(--primary)' : '#888';
+
+    const html = `
+        <div class="detail-header-group" style="text-align:left;">
+            <span style="background:${statusColor}; color:white; padding:5px 15px; border-radius:15px; font-size:0.9rem;">${r.status}</span>
+            <h1 class="detail-title" style="margin-top:15px; font-size:2rem;">${r.title}</h1>
+        </div>
+        <div class="detail-body">
+            <div class="info-row">
+                <div class="info-label">Agency</div>
+                <div>${r.agency}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Period</div>
+                <div>${r.period}</div>
+            </div>
+            <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
+            <div class="info-row">
+                <div class="info-label">Description</div>
+                <div style="line-height:1.8;">${r.description}</div>
+            </div>
+        </div>
+    `;
+    openDetail(html);
+}
+
+/* --- 5. Others (News, Publications, Awards) --- */
+// (기존 renderPublications, renderAwardsPage 유지하되 DOM 체크 추가)
+function renderNewsPage() {
+    const container = document.getElementById('news-list');
+    if(!container) return;
+    newsData.forEach(n => {
+        container.innerHTML += `
+            <div class="pub-item">
+                <div class="pub-year" style="font-size:1rem; color:#666; min-width:100px;">${n.date}</div>
+                <div class="pub-content">
+                    <h3>${n.title}</h3>
+                    <p>${n.content}</p>
+                </div>
+            </div>`;
     });
 }
 
 // 4. Other Page Renderers (Placeholder)
-function renderHome() { /* ... data.js 참조 ... */ }
+/* --- Home Rendering --- */
+function renderHome() {
+    // News (Top 3)
+    const newsContainer = document.getElementById('home-news-container');
+    const recentNews = newsData.slice(0, 3);
+
+    recentNews.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'research-card'; // Reuse styling
+        div.innerHTML = `
+            <div class="card-body">
+                <small style="color:var(--primary)">${item.date}</small>
+                <h3>${item.title}</h3>
+                <p>${item.content.substring(0, 60)}...</p>
+            </div>
+        `;
+        newsContainer.appendChild(div);
+    });
+
+    // Research Highlights (Top 4)
+    const researchContainer = document.getElementById('home-research-container');
+    const highlights = researchData.slice(0, 4);
+
+    highlights.forEach(item => {
+        const card = createResearchCard(item);
+        researchContainer.appendChild(card);
+    });
+}
 function renderResearchPage() {
     const container = document.getElementById('research-list');
     if(!container) return;

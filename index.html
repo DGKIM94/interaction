@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interaction Lab - POSTECH</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
@@ -21,20 +22,31 @@
             </ul>
         </div>
     </nav>
-    <div class="hero">
-        <div>
-            <h1>Future of Haptic Interaction</h1>
-            <p>POSTECH Interaction Lab explores the cutting-edge of Haptics, VR/AR, and Multimodal Interfaces.</p>
-        </div>
+
+    <div class="container" style="text-align:center; padding: 100px 20px;">
+        <h1 style="font-size:3.5rem; margin-bottom:20px; color:var(--dark);">Future of <span style="color:var(--primary)">Haptic Interaction</span></h1>
+        <p style="font-size:1.2rem; color:#666; max-width:700px; margin:0 auto 50px;">
+            POSTECH Interaction Lab explores the cutting-edge of Haptics, VR/AR, and Multimodal Interfaces.
+        </p>
+        <img src="images/lab_intro1.jpg" style="width:100%; border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
     </div>
+
     <div class="container">
-        <h2 class="page-header">Latest News</h2>
-        <div id="home-news" class="member-grid"></div>
-        <br><br>
-        <h2 class="page-header">Research Highlights</h2>
+        <div class="section-header">
+            <h2>Latest News</h2>
+        </div>
+        <div id="home-news" class="home-news-grid"></div>
+
+        <br><br><br>
+
+        <div class="section-header">
+            <h2>Research Highlights</h2>
+        </div>
         <div id="home-research" class="member-grid"></div>
     </div>
+
     <footer>&copy; 2026 Interaction Lab. POSTECH.</footer>
+
     <script src="data.js"></script>
     <script src="script.js"></script>
     <script>renderHome();</script>
