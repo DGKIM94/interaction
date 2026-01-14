@@ -157,6 +157,15 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
 .tab-btn.active[data-cat="journal"] { background: var(--primary); }
 .tab-btn.active[data-cat="conference"] { background: var(--secondary); }
 .tab-btn.active[data-cat="patent"] { background: var(--accent); }
+/* style.css */
+
+/* 탭 버튼 활성화 색상 추가 */
+.tab-btn.active[data-cat="poster"] { background: #10b981; } /* 초록색 (Emerald) */
+.tab-btn.active[data-cat="demo"] { background: #f59e0b; }   /* 주황색 (Amber) */
+
+/* 리스트 아이템 뱃지 색상 추가 (badge-container 쪽) */
+.pub-badge.poster { background: #10b981; }
+.pub-badge.demo { background: #f59e0b; }
 
 .year-filter { display: flex; align-items: center; gap: 10px; }
 .year-input {
