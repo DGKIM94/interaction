@@ -1125,7 +1125,7 @@ const publicationData = [
         title: "Merging Camera and Object Haptic Motion Effects for Improved 4D Experiences",
         authors: "Jaejun Park, Sangyoon Han, and Seungmoon Choi",
         venue: "IEEE International Symposium on Mixed and Augmented Reality",
-        link: "https://ieeexplore.ieee.org/document/10309653"
+        link: "https://ieeexplore.ieee.org/document/10316361"
     },
     {
         year: 2023,
@@ -1134,7 +1134,7 @@ const publicationData = [
         title: "Perceptual Simultaneity Between Vibrotactile and Impact Stimuli",
         authors: "Chaeyong Park and Seungmoon Choi",
         venue: "IEEE World Haptics Conference",
-        link: "https://ieeexplore.ieee.org/document/10224422"
+        link: "https://ieeexplore.ieee.org/document/102244592"
     },
     {
         year: 2023,
@@ -1143,7 +1143,7 @@ const publicationData = [
         title: "Information Transfer of Full-Body Vibrotactile Stimuli: An Initial Study with One to Three Sequential Vibrations",
         authors: "Jaejun Park, Junwoo Kim, Chaeyong Park, Sangyoon Han, Junseok Park, and Seungmoon Choi",
         venue: "IEEE World Haptics Conference",
-        link: "https://ieeexplore.ieee.org/document/10224427"
+        link: "https://ieeexplore.ieee.org/document/10224391"
     },
     {
         year: 2023,
@@ -1152,7 +1152,7 @@ const publicationData = [
         title: "Human Recognition Performance of Simple Spatial Vibrotactile Patterns on the Torso",
         authors: "Junwoo Kim, Heeyeon Kim, Chaeyong Park, and Seungmoon Choi",
         venue: "IEEE World Haptics Conference",
-        link: "https://ieeexplore.ieee.org/document/10224373"
+        link: "https://ieeexplore.ieee.org/document/10224430"
     },
     {
         year: 2023,
@@ -1161,7 +1161,7 @@ const publicationData = [
         title: "👑 Visuo-haptic Crossmodal Shape Perception Model for Shape-Changing Handheld Controllers Bridged by Inertial Tensor",
         authors: "Chaeyong Park, Jeongwoo Kim, and Seungmoon Choi",
         venue: "ACM CHI Conference on Human Factors in Computing Systems (Honorable Mention)",
-        link: "https://doi.org/10.1145/3544548.3580724"
+        link: "https://dl.acm.org/doi/10.1145/3544548.3580724"
     },
     {
         year: 2023,
@@ -1170,7 +1170,7 @@ const publicationData = [
         title: "Generating Real-Time, Selective, and Multimodal Haptic Effects from Sound for Gaming Experience Enhancement",
         authors: "Gyeore Yun, Minjae Mun, Jungeun Lee, Dong-Geun Kim, Hong Z Tan, and Seungmoon Choi",
         venue: "ACM CHI Conference on Human Factors in Computing Systems",
-        link: ""
+        link: "https://dl.acm.org/doi/10.1145/3544548.3580787"
     },
     {
         year: 2023,
@@ -1179,7 +1179,7 @@ const publicationData = [
         title: "Generating Haptic Motion Effects for Multiple Articulated Bodies for Improved 4D Experiences: A Camera Space Approach",
         authors: "Sangyoon Han, Jaejun Park, and Seungmoon Choi",
         venue: "ACM CHI Conference on Human Factors in Computing Systems",
-        link: "https://doi.org/10.1145/3544548.3580727"
+        link: "https://dl.acm.org/doi/10.1145/3544548.3580727"
     },
 
     // --- 2022 ---
@@ -1219,7 +1219,7 @@ const publicationData = [
         title: "Absolute and Differential Thresholds of Motion Effects in Cardinal Directions",
         authors: "Jiwan Lee, Jaejun Park, and Seungmoon Choi",
         venue: "ACM Symposium on Virtual Reality Software and Technology",
-        link: "https://doi.org/10.1145/3489849.3489886"
+        link: "https://dl.acm.org/doi/10.1145/3489849.3489870"
     },
     {
         year: 2021,
@@ -1228,7 +1228,7 @@ const publicationData = [
         title: "Image-Based Texture Styling for Motion Effect Rendering",
         authors: "Beomsu Lim, Sangyoon Han, and Seungmoon Choi",
         venue: "ACM Symposium on Virtual Reality Software and Technology",
-        link: "https://doi.org/10.1145/3489849.3489862"
+        link: "https://dl.acm.org/doi/10.1145/3489849.3489854"
     },
     {
         year: 2021,
@@ -1237,7 +1237,7 @@ const publicationData = [
         title: "Identifying Contact Fingers on Touch Sensitive Surfaces by Ring-Based Vibratory Communication",
         authors: "Seungjae Oh, Chaeyong Park, Yo-Seb Jeon, and Seungmoon Choi",
         venue: "ACM Symposium on User Interface Software and Technology",
-        link: "https://doi.org/10.1145/3472749.3474745"
+        link: "https://dl.acm.org/doi/10.1145/3472749.3474745"
     },
     {
         year: 2021,
@@ -1246,7 +1246,7 @@ const publicationData = [
         title: "Perceived Hardness of Virtual Surface: A Function of Stiffness, Damping, and Contact Transient",
         authors: "Hyejin Choi, Amit Bhardwaj, Gyeore Yoon, and Seungmoon Choi",
         venue: "IEEE World Haptics Conference",
-        link: "https://ieeexplore.ieee.org/document/9517173"
+        link: "https://ieeexplore.ieee.org/document/9517263"
     },
     {
         year: 2021,
@@ -1255,7 +1255,7 @@ const publicationData = [
         title: "Multi-Contact Stiffness and Friction Augmentation Using Contact Centroid-Based Normal-Tangential Force Decomposing",
         authors: "Sunghoon Yim, Seungmoon Choi, and Seokhee Jeon",
         venue: "IEEE World Haptics Conference",
-        link: "https://ieeexplore.ieee.org/document/9517169"
+        link: "https://ieeexplore.ieee.org/document/9517211"
     },
     {
         year: 2021,
@@ -1264,7 +1264,7 @@ const publicationData = [
         title: "Vibrotactile Metaphor of Physical Interaction Using Body-Penetrating Phantom Sensations: Stepping on a Virtual Object",
         authors: "Dajin Lee, Seungjae Oh, Seungmoon Choi, and Bum-Jae You",
         venue: "IEEE World Haptics Conference",
-        link: "https://ieeexplore.ieee.org/document/9517224"
+        link: "https://ieeexplore.ieee.org/document/9517144"
     },
     {
         year: 2021,
@@ -1273,7 +1273,7 @@ const publicationData = [
         title: "Perceived Magnitude Function of Friction Rendered by the Dahl Model",
         authors: "Beomsu Lim, Junkyeong Choi, Yongjae Yoo, and Seungmoon Choi",
         venue: "IEEE World Haptics Conference",
-        link: "https://ieeexplore.ieee.org/document/9517179"
+        link: "https://ieeexplore.ieee.org/document/9517127"
     },
     {
         year: 2021,
@@ -1282,7 +1282,7 @@ const publicationData = [
         title: "Improving Viewing Experiences of First-Person Shooter Gameplays with Automatically-Generated Motion Effects",
         authors: "Gyeore Yun, Hyoseung Lee, Sangyoon Han, and Seungmoon Choi",
         venue: "ACM CHI Conference on Human Factors in Computing Systems",
-        link: "https://doi.org/10.1145/3411764.3445508"
+        link: "https://dl.acm.org/doi/10.1145/3411764.3445358"
     },
     {
         year: 2021,
