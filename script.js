@@ -39,7 +39,27 @@ function getSortedNews() {
     return [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
+// script.js
 
+// ... [이전 코드는 그대로 유지] ...
+
+/* =========================================
+   0. 모바일 메뉴 토글 (추가됨)
+   ========================================= */
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active'); // 메뉴 보이기/숨기기 토글
+        });
+    }
+});
+
+/* =========================================
+   1. 유틸리티: 상세 오버레이 ... (이하 기존 코드)
+   ========================================= */
 /* =========================================
    3. 메인 페이지 (Home Rendering)
    ========================================= */
