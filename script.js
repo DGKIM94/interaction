@@ -166,7 +166,7 @@ function showNewsDetail(index) {
 
 
 /* =========================================
-   5. 멤버 페이지 (Members Page)
+   5. 멤버 페이지 (Members Page) - Alumni 정렬 추가
    ========================================= */
 function renderMembers() {
     const profList = document.getElementById('prof-list');
@@ -174,26 +174,50 @@ function renderMembers() {
     const msList = document.getElementById('ms-list');
     const alumniList = document.getElementById('alumni-list');
 
-    if (!profList || typeof memberData === 'undefined') return;
+    if (!profList) return;
 
+    // 중복 렌더링 방지를 위해 초기화
+    profList.innerHTML = '';
+    phdList.innerHTML = '';
+    msList.innerHTML = '';
+    if (alumniList) alumniList.innerHTML = '';
+
+    if (typeof memberData === 'undefined') return;
+
+    // 1. 교수님 및 재학생 렌더링 (기존 데이터 순서 유지)
     memberData.forEach((m, index) => {
-        if (m.role === 'alumni') {
-            if (alumniList) {
-                alumniList.innerHTML += `
-                    <div class="alumni-item">
-                        <strong style="color:var(--dark); font-size:1.1rem;">${m.name}</strong>
-                        <span style="font-size:0.85rem; color:#666; display:block; margin-top:4px;">${m.desc}</span>
-                    </div>`;
-            }
-        } else {
+        if (m.role !== 'alumni') {
             const card = createMemberCard(m, index);
             if (m.role === 'prof') profList.innerHTML += card;
             else if (m.desc.includes('Ph.D') || m.desc.includes('Direct') || m.desc.includes('Post')) phdList.innerHTML += card;
             else if (m.desc.includes('Master') || m.desc.includes('M.S')) msList.innerHTML += card;
         }
     });
-}
 
+    // 2. Alumni 렌더링 (졸업 연도 내림차순 정렬)
+    if (alumniList) {
+        // Alumni만 따로 추출
+        const alumni = memberData.filter(m => m.role === 'alumni');
+
+        // 연도 추출 및 정렬 함수 (내림차순)
+        alumni.sort((a, b) => {
+            const getYear = (str) => {
+                const match = str.match(/\((19|20)\d{2}\)/); // (19xx) 또는 (20xx) 찾기
+                return match ? parseInt(match[0].replace(/[()]/g, '')) : 0;
+            };
+            return getYear(b.desc) - getYear(a.desc); // 최신순 정렬
+        });
+
+        // 정렬된 Alumni 렌더링
+        alumni.forEach(m => {
+            alumniList.innerHTML += `
+                <div class="alumni-item" style="background:#fff; padding:15px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left:4px solid #ccc;">
+                    <strong style="color:var(--dark);">${m.name}</strong>
+                    <span style="font-size:0.85rem; color:#666; display:block; margin-top:4px;">${m.desc}</span>
+                </div>`;
+        });
+    }
+}
 function createMemberCard(m, index) {
     return `
         <div class="member-card" onclick="showMemberDetail(${index})">
