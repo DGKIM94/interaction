@@ -1056,15 +1056,6 @@ const posterDemoPapers = [
         venue: "ICRA Workshop on Applications and Future Directions of Affective Technologies (Best Poster Presentation Award)",
         link: ""
     },
-    {
-        year: 2024,
-        category: "poster",
-        venueShort: "KHC",
-        title: "Automatic Authoring of Physical and Perceptual Motion Effects for Virtual Reality",
-        authors: "Jiwan Lee, Sangyoon Han, and Seungmoon Choi",
-        venue: "Korea Haptics Conference (International Session)",
-        link: "https://arxiv.org/abs/2411.05162"
-    },
 
     // --- 2023 ---
     {
