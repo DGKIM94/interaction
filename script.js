@@ -370,6 +370,8 @@ function updateVenueOptions(category) {
 
 /* script.js - applyPubFilter 함수 수정본 */
 
+/* script.js - applyPubFilter 함수 전체 교체 */
+
 function applyPubFilter() {
     const container = document.getElementById('pub-list');
     if (!container) return;
@@ -416,16 +418,16 @@ function applyPubFilter() {
         // 2. 카테고리 뱃지 HTML
         const catBadge = `<span class="pub-badge ${pub.category}">${pub.category}</span>`;
 
-        // 3. [수정됨] 베뉴 뱃지 (Patent일 때만 표시, 나머지는 숨김)
+        // 3. 베뉴 뱃지 (Patent일 때만 표시, 나머지는 숨김)
         const venueBadge = (pub.category === 'patent' && pub.venueShort)
             ? `<span class="pub-badge venue-tag">${pub.venueShort}</span>`
             : '';
 
-        // 4. 수상 문구 하이라이트 처리
+        // 4. [핵심 수정] 수상 문구 하이라이트 (키워드 추가 및 대소문자 무시 플래그 'gi')
         let highlightedVenue = pub.venue;
         if (pub.venue) {
             highlightedVenue = pub.venue.replace(
-                /\(([^)]*(?:Best|Award|Honorable|Prize|Choice)[^)]*)\)/g,
+                /\(([^)]*(?:Best|Award|Cover|Honorable|Prize|Choice|Candidate|Finalist|Teaser)[^)]*)\)/gi,
                 '(<span class="award-text">$1</span>)'
             );
         }
@@ -440,7 +442,8 @@ function applyPubFilter() {
                 <div class="pub-content">
                     <div class="badge-container">
                         ${catBadge}
-                        ${venueBadge} </div>
+                        ${venueBadge}
+                    </div>
                     <h3>${pub.title}</h3>
                     <div class="pub-authors">${pub.authors}</div>
                     <div class="pub-venue">${highlightedVenue}</div>
