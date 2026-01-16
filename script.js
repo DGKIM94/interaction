@@ -1,7 +1,7 @@
 /* script.js */
 
 /* =========================================
-   1. 유틸리티: 상세 오버레이 (Overlay Control)
+   1. 유틸리티 & 오버레이
    ========================================= */
 function openDetail(html) {
     const overlay = document.getElementById('detail-overlay');
@@ -28,18 +28,16 @@ document.addEventListener('click', function (e) {
     }
 });
 
-
 /* =========================================
-   2. 데이터 헬퍼 (Data Helper)
+   2. 데이터 헬퍼
    ========================================= */
 function getSortedNews() {
     if (typeof newsData === 'undefined') return [];
     return [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
-
 /* =========================================
-   3. 메인 페이지 (Home Rendering)
+   3. 메인 페이지
    ========================================= */
 function renderHome() {
     const ytContainer = document.getElementById('youtube-gallery');
@@ -57,11 +55,9 @@ function renderHome() {
     if (newsContainer && typeof newsData !== 'undefined') {
         const sorted = getSortedNews();
         newsContainer.innerHTML = '';
-
         sorted.slice(0, 3).forEach(item => {
             const originalIndex = newsData.findIndex(n => n.id === item.id);
             const imgHtml = item.image ? `<img src="${item.image}" class="news-thumb" alt="${item.title}" onerror="this.style.display='none'">` : '';
-
             newsContainer.innerHTML += `
                 <div class="news-card" onclick="showNewsDetail(${originalIndex})">
                     ${imgHtml}
@@ -79,7 +75,6 @@ function renderHome() {
     if (resContainer && typeof researchData !== 'undefined') {
         resContainer.innerHTML = '';
         const highlights = researchData.filter(r => r.status === 'Ongoing').slice(0, 4);
-
         highlights.forEach(item => {
             resContainer.innerHTML += `
                 <div class="member-card" onclick="location.href='research.html'">
@@ -94,21 +89,17 @@ function renderHome() {
     }
 }
 
-
 /* =========================================
-   4. 뉴스 페이지 (News Page)
+   4. 뉴스 페이지
    ========================================= */
 function renderNewsPage() {
     const container = document.getElementById('news-grid-full');
     if (!container || typeof newsData === 'undefined') return;
-
     const sorted = getSortedNews();
     container.innerHTML = '';
-
     sorted.forEach(item => {
         const originalIndex = newsData.findIndex(n => n.id === item.id);
         const imgHtml = item.image ? `<img src="${item.image}" class="news-thumb" onerror="this.style.display='none'">` : '';
-
         container.innerHTML += `
             <div class="news-card" onclick="showNewsDetail(${originalIndex})">
                 ${imgHtml}
@@ -125,7 +116,6 @@ function renderNewsPage() {
 function showNewsDetail(index) {
     const item = newsData[index];
     const imgHtml = item.image ? `<img src="${item.image}" class="detail-img-lg" style="width:100%; height:300px; border-radius:16px; border:none; object-fit:cover;" onerror="this.style.display='none'">` : '';
-
     const html = `
         ${imgHtml}
         <h1 class="detail-title" style="margin-top:20px;">${item.title}</h1>
@@ -139,9 +129,8 @@ function showNewsDetail(index) {
     openDetail(html);
 }
 
-
 /* =========================================
-   5. 멤버 페이지 (Members Page)
+   5. 멤버 페이지
    ========================================= */
 function renderMembers() {
     const profList = document.getElementById('prof-list');
@@ -150,7 +139,6 @@ function renderMembers() {
     const alumniList = document.getElementById('alumni-list');
 
     if (!profList) return;
-
     profList.innerHTML = '';
     phdList.innerHTML = '';
     msList.innerHTML = '';
@@ -176,7 +164,6 @@ function renderMembers() {
             };
             return getYear(b.desc) - getYear(a.desc);
         });
-
         alumni.forEach(m => {
             alumniList.innerHTML += `
                 <div class="alumni-item" style="background:#fff; padding:15px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left:4px solid #ccc;">
@@ -200,7 +187,6 @@ function createMemberCard(m, index) {
 function showMemberDetail(index) {
     const m = memberData[index];
     let extraInfo = '';
-
     const websiteLink = m.website
         ? `<a href="${m.website}" target="_blank" style="display:inline-block; margin-top:10px; color:var(--primary); font-weight:700; text-decoration:none;">
              <i class="fas fa-globe"></i> Website
@@ -226,9 +212,8 @@ function showMemberDetail(index) {
     openDetail(html);
 }
 
-
 /* =========================================
-   6. 연구 페이지 (Research Page)
+   6. 연구 페이지
    ========================================= */
 function renderResearchPage() {
     const ongoingContainer = document.getElementById('ongoing-list');
@@ -288,7 +273,6 @@ function showAreaDetail(index) {
 function showProjectDetail(index) {
     const r = researchData[index];
     const statusColor = r.status === 'Ongoing' ? 'var(--primary)' : '#64748b';
-
     const html = `
         <span style="background:${statusColor}; color:white; padding:5px 15px; border-radius:20px; font-size:0.9rem; font-weight:bold;">${r.status}</span>
         <h1 class="detail-title" style="margin-top:15px; font-size:2rem;">${r.title}</h1>
@@ -300,15 +284,14 @@ function showProjectDetail(index) {
     openDetail(html);
 }
 
-
 /* =========================================
-   7. 논문 페이지 (Publications Page) - 수정됨
+   7. 논문 페이지 (Publications) - 수정됨
    ========================================= */
 function renderPublications() {
     const container = document.getElementById('pub-list');
     if (!container || typeof publicationData === 'undefined') return;
 
-    // [자동 설정] 연도 필터 최소/최대값
+    // 연도 필터 자동 설정
     const startInput = document.getElementById('year-start');
     const endInput = document.getElementById('year-end');
 
@@ -334,7 +317,6 @@ function renderPublications() {
         btn.addEventListener('click', () => {
             buttons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             const category = btn.dataset.cat;
             updateVenueOptions(category);
             applyPubFilter();
@@ -357,20 +339,12 @@ function updateVenueOptions(category) {
     });
 
     const sortedVenues = Array.from(venueSet).sort();
-
     venueSelect.innerHTML = '<option value="all">All Venues</option>';
     sortedVenues.forEach(shortName => {
         venueSelect.innerHTML += `<option value="${shortName}">${shortName}</option>`;
     });
-
     venueSelect.value = 'all';
 }
-
-/* script.js - applyPubFilter 함수 수정본 */
-
-/* script.js - applyPubFilter 함수 수정본 */
-
-/* script.js - applyPubFilter 함수 전체 교체 */
 
 function applyPubFilter() {
     const container = document.getElementById('pub-list');
@@ -395,7 +369,6 @@ function applyPubFilter() {
         const textMatch = pub.title.toLowerCase().includes(searchKeyword) ||
                           pub.authors.toLowerCase().includes(searchKeyword);
         const venueMatch = selectedVenue === 'all' || pub.venueShort === selectedVenue;
-
         return catMatch && yearMatch && textMatch && venueMatch;
     });
 
@@ -408,27 +381,43 @@ function applyPubFilter() {
         return;
     }
 
+    // [수상 키워드 정규식] - 이곳에 키워드 추가 가능
+    // Best, Award, Honorable, Prize, Choice, Candidate, Finalist, Teaser, Cover Paper 등 포함
+    const awardRegex = /(Best|Award|Honorable|Prize|Choice|Candidate|Finalist|Teaser|Cover)/i;
+
     filtered.forEach(pub => {
-        // 1. 링크 버튼 HTML
+        // 1. 링크 버튼
         const linkHtml = pub.link ?
             `<a href="${pub.link}" class="pub-link" target="_blank">
                 <span>View</span> <i class="fas fa-external-link-alt"></i>
              </a>` : '';
 
-        // 2. 카테고리 뱃지 HTML
+        // 2. 카테고리 뱃지
         const catBadge = `<span class="pub-badge ${pub.category}">${pub.category}</span>`;
 
-        // 3. 베뉴 뱃지 (Patent일 때만 표시, 나머지는 숨김)
+        // 3. 베뉴 뱃지 (Patent만 표시)
         const venueBadge = (pub.category === 'patent' && pub.venueShort)
             ? `<span class="pub-badge venue-tag">${pub.venueShort}</span>`
             : '';
 
-        // 4. [핵심 수정] 수상 문구 하이라이트 (키워드 추가 및 대소문자 무시 플래그 'gi')
-        let highlightedVenue = pub.venue;
-        if (pub.venue) {
-            highlightedVenue = pub.venue.replace(
-                /\(([^)]*(?:Best|Award|Cover|Honorable|Prize|Choice|Candidate|Finalist|Teaser)[^)]*)\)/gi,
-                '(<span class="award-text">$1</span>)'
+        // 4. [자동 왕관 처리]
+        // data.js에 이미 왕관이 있든 없든, venue에 수상 키워드가 있으면 왕관을 붙인다.
+        // 먼저 기존 제목에서 왕관 제거 (중복 방지)
+        let displayTitle = pub.title.replace('👑', '').trim();
+
+        // Venue에 수상 키워드가 있으면 제목 앞에 왕관 추가
+        if (pub.venue && awardRegex.test(pub.venue)) {
+            displayTitle = "👑 " + displayTitle;
+        }
+
+        // 5. [문구 하이라이트 처리]
+        // 괄호 안에 수상 키워드가 포함된 경우 -> 괄호 전체를 빨갛게 처리
+        let highlightedVenue = pub.venue || "";
+        if (highlightedVenue) {
+            // 예: (Accepted, Cover Paper) 전체를 찾아서 <span>으로 감쌈
+            highlightedVenue = highlightedVenue.replace(
+                /(\([^)]*(?:Best|Award|Honorable|Prize|Choice|Candidate|Finalist|Teaser|Cover)[^)]*\))/gi,
+                '<span class="award-text">$1</span>'
             );
         }
 
@@ -438,13 +427,12 @@ function applyPubFilter() {
                     <div class="pub-year">${pub.year}</div>
                     ${linkHtml}
                 </div>
-
                 <div class="pub-content">
                     <div class="badge-container">
                         ${catBadge}
                         ${venueBadge}
                     </div>
-                    <h3>${pub.title}</h3>
+                    <h3>${displayTitle}</h3>
                     <div class="pub-authors">${pub.authors}</div>
                     <div class="pub-venue">${highlightedVenue}</div>
                 </div>
@@ -452,17 +440,14 @@ function applyPubFilter() {
     });
 }
 
-
 /* =========================================
-   8. 수상 페이지 (Awards Page)
+   8. 수상 페이지
    ========================================= */
 function renderAwardsPage() {
     const container = document.getElementById('award-list-container');
     if (!container || typeof awardData === 'undefined') return;
-
     container.innerHTML = '';
     const sorted = [...awardData].sort((a, b) => parseInt(b.date) - parseInt(a.date));
-
     sorted.forEach(item => {
         container.innerHTML += `
             <div class="pub-item award-item-style">
@@ -475,20 +460,16 @@ function renderAwardsPage() {
     });
 }
 
-
 /* =========================================
-   9. 자동 네비게이션 활성화
+   9. 자동 네비게이션
    ========================================= */
 document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname.split("/").pop() || 'index.html';
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         const linkPage = item.getAttribute('href');
-        if (currentPage === linkPage) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
+        if (currentPage === linkPage) item.classList.add('active');
+        else item.classList.remove('active');
     });
 
     const menuToggle = document.querySelector('.menu-toggle');
